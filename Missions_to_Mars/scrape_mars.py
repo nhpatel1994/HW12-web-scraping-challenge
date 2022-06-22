@@ -14,16 +14,16 @@ def scrape_info():
     # Visit desired URL
     url = "https://redplanetscience.com/"
     browser.visit(url)
-
+    time.sleep(1)
     # Use Beautiful Soup to find the latest headline and blurb
     html = browser.html
     soup = bs(html, 'html.parser')
 
-    news_title = soup.find('div', class_='content_title').text
-    news_p = soup.find('div', class_='article_teaser_body').text
+    news_title = soup.find('div', class_='content_title').get_text(strip=True)
+    news_p = soup.find('div', class_='article_teaser_body').get_text(strip=True)
 
-    #print(news_title)
-    #print(news_p)
+    # print(news_title)
+    # print(news_p)
 
     # Close the browser after scraping
     #browser.quit()
@@ -75,6 +75,7 @@ def scrape_info():
 
     hemisphere_image_urls = []
     hemisphere_images = []
+    image_titles =[]
 
     for page in range(4):
         
@@ -89,21 +90,30 @@ def scrape_info():
         dict_entry = {"title: "+str(image_title.text):"img_url (click or copy) : "+"https://marshemispheres.com/"+str(image_url) + " "}
         
         hemisphere_image_urls.append(dict_entry)
-        #hemisphere_images.append(tag)
+
+        hemisphere_images.append("https://marshemispheres.com/"+str(image_url))
+        image_titles.append(image_title.text)
         
         browser.back()
 
-    browser.quit()
+    browser.quit() 
 
-    mars_data = {
+    scrape_mars_data = {
         "Headline": news_title,
         "Blurb": news_p,
-        "Current Mars Image": featured_img_url,
-        "Mars Data": html_mars_table,
-        "hemisphere_images": hemisphere_image_urls
+        "Current_Mars_Image": featured_img_url,
+        "Mars_Data": html_mars_table,
+        "hemisphere_image_1": hemisphere_images[0],
+        "hemisphere_image_2": hemisphere_images[1],
+        "hemisphere_image_3": hemisphere_images[2],
+        "hemisphere_image_4": hemisphere_images[3],
+        "image_1_title": image_titles[0],
+        "image_2_title": image_titles[1],
+        "image_3_title": image_titles[2],
+        "image_4_title": image_titles[3]
     }
 
-    return(mars_data)
+    return scrape_mars_data
 
     
     
